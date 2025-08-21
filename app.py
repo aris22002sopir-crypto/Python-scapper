@@ -1,6 +1,6 @@
 # app.py
 import streamlit as st
-from scraper import scrape_saasquatch
+
 from contact_component import show_contact_section
 from universal_scraper import scrape_universal_contact, save_scraped_data
 from dashboard_component import show_dashboard, add_to_history  # Import dashboard component yang benar
