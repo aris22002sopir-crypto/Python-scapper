@@ -28,6 +28,31 @@ st.markdown("""
 st.sidebar.title("🔍 Navigation")
 page = st.sidebar.radio("Navigate to", ["Dashboard", "Universal Contact Scraper", "Competitive Analysis", "Contact Us"])
 
+# Function to scrape pricing data (added to fix the error)
+def scrape_pricing_data(url):
+    """
+    Placeholder function for scraping pricing data from a website.
+    You'll need to implement the actual scraping logic based on the target website structure.
+    """
+    try:
+        # This is a placeholder - implement actual scraping logic
+        # For demonstration, returning sample data
+        sample_data = {
+            'plan': ['Basic', 'Pro', 'Enterprise'],
+            'price': ['$49/month', '$99/month', 'Custom'],
+            'features': ['Feature 1, Feature 2', 'All Basic features + Feature 3', 'All Pro features + Dedicated Support']
+        }
+        
+        return {
+            'pricing_data': pd.DataFrame(sample_data),
+            'error': None
+        }
+    except Exception as e:
+        return {
+            'pricing_data': pd.DataFrame(),
+            'error': str(e)
+        }
+
 # Main content area
 if page == "Dashboard":
     show_dashboard()  # Menggunakan dashboard component yang sudah diperbaiki
@@ -137,9 +162,11 @@ elif page == "Competitive Analysis":
     
     if analyze_clicked:
         with st.spinner('Analyzing website...'):
-            hasil = (target_url)
+            # Fixed: Replaced the incorrect line with a proper function call
+            hasil = scrape_pricing_data(target_url)
         
-        if not hasil['pricing_data'].empty:
+        # Fixed: Added proper error handling
+        if hasil and 'pricing_data' in hasil and not hasil['pricing_data'].empty:
             st.success('✅ Analysis completed!')
             
             # Convert to dictionary format for history
@@ -179,7 +206,8 @@ elif page == "Competitive Analysis":
                     use_container_width=True
                 )
         else:
-            st.warning("No pricing data found or error occurred during scraping")
+            error_msg = hasil.get('error', 'Unknown error occurred') if isinstance(hasil, dict) else 'No pricing data found'
+            st.warning(f"No pricing data found or error occurred: {error_msg}")
 
 elif page == "Contact Us":
     show_contact_section()
