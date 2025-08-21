@@ -1,0 +1,616 @@
+[
+  {
+    "website": "https://www.pepsi.com/",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "https://www.pepsi.com/"
+    ],
+    "crawl_timestamp": "2025-08-21T10:00:18.189071",
+    "timestamp": "2025-08-21T10:00:18.190142",
+    "id": 1
+  },
+  {
+    "website": "https://www.saasquatchleads.com/",
+    "pricing_data": [
+      {
+        "Features": "Monthly Leads",
+        "Free": "5",
+        "Bronze": "50",
+        "Silver": "125",
+        "Gold": "292",
+        "Platinum": "Unlimited",
+        "Custom": "Custom"
+      },
+      {
+        "Features": "Lead Scraping",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Access to Contact Info",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Live Dashboard Analytics",
+        "Free": "\u2714\ufe0f",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Export to CSV/Excel",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Advanced Filters",
+        "Free": "\u2014",
+        "Bronze": "\u2014",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "AI Tools (Email Generation)",
+        "Free": "\u2014",
+        "Bronze": "\u2014",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Priority Support",
+        "Free": "\u2014",
+        "Bronze": "\u2014",
+        "Silver": "\u2014",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Lead Filters",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Revenue Estimate",
+        "Free": "\u2714\ufe0f",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Price",
+        "Free": "$0/mo",
+        "Bronze": "$19/mo",
+        "Silver": "$49/mo",
+        "Gold": "$99/mo",
+        "Platinum": "$199/mo",
+        "Custom": "Custom"
+      },
+      {
+        "Features": "",
+        "Free": "Continue Free",
+        "Bronze": "Buy now",
+        "Silver": "Buy now",
+        "Gold": "Coming Soon",
+        "Platinum": "Coming Soon",
+        "Custom": "Contact Sales"
+      }
+    ],
+    "emails": [],
+    "phones": [],
+    "social_links": {},
+    "scraper_type": "competitive_analysis",
+    "timestamp": "2025-08-21T10:00:31.680631",
+    "id": 2
+  },
+  {
+    "website": "https://contact.pepsico.com/pepsi",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "https://contact.pepsico.com/pepsi"
+    ],
+    "crawl_timestamp": "2025-08-21T10:01:09.706553",
+    "timestamp": "2025-08-21T10:01:09.709713",
+    "id": 3
+  },
+  {
+    "website": "https://www.coca-cola.com/id/id",
+    "emails": [
+      "info@coca-cola.co.idwebsite",
+      "info@coca-cola.co.id"
+    ],
+    "phones": [
+      "8001002653",
+      "08001002653"
+    ],
+    "addresses": [],
+    "social_links": {
+      "twitter": "https://twitter.com/cocacola_id",
+      "instagram": "https://www.instagram.com/cocacola_id/?hl=en",
+      "youtube": "https://www.youtube.com/user/cocacola",
+      "facebook": "https://www.facebook.com/coca-cola/"
+    },
+    "pages_crawled": [
+      "https://www.coca-cola.com/id/id/offerings/share-a-coke/customization",
+      "https://www.coca-cola.com/id/id/offerings/share-a-coke/customization#maincontent",
+      "https://www.coca-cola.com/id/id/offerings/coca-cola-friyay-mission",
+      "https://www.coca-cola.com/id/id/brands",
+      "https://www.coca-cola.com/id/id/about-us/contact-us",
+      "https://www.coca-cola.com/id/id/offerings/recycle-me",
+      "https://www.coca-cola.com/id/id/about-us/faq",
+      "https://www.coca-cola.com/id/id",
+      "https://www.coca-cola.com/id/id/offerings/creations",
+      "https://www.coca-cola.com/id/id#maincontent"
+    ],
+    "crawl_timestamp": "2025-08-21T10:01:22.632951",
+    "timestamp": "2025-08-21T10:01:22.635492",
+    "id": 4
+  },
+  {
+    "website": "https://www.toshiba.com",
+    "emails": [
+      "TIC-Sorter.Sales@toshiba.com",
+      "tic-hev-wixom@toshiba.com",
+      "TIC-upsservice@toshiba.com",
+      "tic-transportation@toshiba.com",
+      "tic-ups-appengr@toshiba.com",
+      "darel.reed@toshiba.com",
+      "d-commercial@toshiba.com",
+      "TIC-Webmaster@toshiba.com",
+      "tic-sorter.sales@toshiba.com",
+      "tic-webmaster@toshiba.com",
+      "tic-service@toshiba.com",
+      "TIC-HEV-Wixom@toshiba.com",
+      "TIC-transportation@TOSHIBA.COM",
+      "Rob.Belle-Isle@toshiba.com",
+      "TIC-UPS-AppEngr@toshiba.com",
+      "Darel.Reed@toshiba.com",
+      "TIC-UPS-RST-CSR@toshiba.com",
+      "analysistic-service@toshiba.com",
+      "TIC-IoTsp@toshiba.com",
+      "rob.belle-isle@toshiba.com",
+      "803-7092tic-service@toshiba.com",
+      "tic-iotsp@toshiba.com",
+      "tic-ups-rst-csr@toshiba.com",
+      "tic-upsservice@toshiba.com",
+      "TIC-T&D-Commercial@toshiba.com",
+      "TIC-Service@toshiba.com"
+    ],
+    "phones": [
+      "19952019",
+      "8558037091",
+      "2527023018",
+      "8558037090",
+      "8558037092",
+      "8558037087",
+      "19952025",
+      "7138965269",
+      "770418002311412",
+      "8778678773",
+      "8023733713",
+      "8558037089",
+      "8002311412",
+      "7138965256",
+      "7138965242",
+      "877867877324"
+    ],
+    "addresses": [
+      "City State Vietnam Virgin Islands "
+    ],
+    "social_links": {
+      "facebook": "https://www.facebook.com/toshibaamerica/",
+      "twitter": "https://twitter.com/toshibaamerica",
+      "youtube": "https://www.youtube.com/user/toshibainnovation",
+      "linkedin": "https://www.linkedin.com/company/toshiba-americas"
+    },
+    "pages_crawled": [
+      "https://www.toshiba.com/tic/industries-served/oil-gas",
+      "https://www.toshiba.com/tic/motors-drives/power-apparatus-components/components/vacuum-contactors",
+      "https://www.toshiba.com/tic/product/",
+      "https://www.toshiba.com/tic/motors-drives",
+      "http://www.toshiba.com/tai/americas/index.jsp",
+      "https://www.toshiba.com/tic",
+      "https://www.toshiba.com/tic/contact-us/find-support",
+      "https://www.toshiba.com/tic/service-warranty/support-contacts",
+      "https://www.toshiba.com",
+      "https://www.toshiba.com/tic/contact-us/request-a-quote"
+    ],
+    "crawl_timestamp": "2025-08-21T10:01:58.721317",
+    "timestamp": "2025-08-21T10:01:58.723780",
+    "id": 5
+  },
+  {
+    "website": "youtube.com",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "youtube.com"
+    ],
+    "crawl_timestamp": "2025-08-21T10:08:28.339477",
+    "timestamp": "2025-08-21T10:08:28.340289",
+    "id": 6
+  },
+  {
+    "website": "linkedin.com",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "linkedin.com"
+    ],
+    "crawl_timestamp": "2025-08-21T10:08:46.302142",
+    "timestamp": "2025-08-21T10:08:46.302901",
+    "id": 7
+  },
+  {
+    "website": "github.com",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "github.com"
+    ],
+    "crawl_timestamp": "2025-08-21T10:08:53.861371",
+    "timestamp": "2025-08-21T10:08:53.862619",
+    "id": 8
+  },
+  {
+    "website": "kompas.com",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "kompas.com"
+    ],
+    "crawl_timestamp": "2025-08-21T10:09:03.981528",
+    "timestamp": "2025-08-21T10:09:03.982499",
+    "id": 9
+  },
+  {
+    "website": "https://www.kompas.com",
+    "emails": [],
+    "phones": [
+      "20082025",
+      "012345678910"
+    ],
+    "addresses": [
+      "Kota Gaza Global 10 Netanyahu Surati Macron",
+      "Kota Nol Korban Jiwa Kecelakaan Lalin TREN9 menit lalu Fenomena Langka Ikan Lele Memanjat Air Terjun di Brasil",
+      "Jalan Menuju Keadilan 24",
+      "kota bisa menjadi ruang aman bagi siapa pun",
+      "Kota Nol Korban Jiwa Kecelakaan Lalin Global 21 Agustus 2025 Netanyahu",
+      "Kota Gaza Global 21 Agustus 2025 ",
+      "Jalan Menuju Keadilan Dibaca 233 kali Analisis 05",
+      "kota HAM",
+      "Jalan Bekasi",
+      "Kota Nol Korban Jiwa Kecelakaan Lalin Mulai 2026"
+    ],
+    "social_links": {
+      "facebook": "http://www.facebook.com/kompascom",
+      "twitter": "http://www.twitter.com/kompascom",
+      "instagram": "http://instagram.com/kompascom",
+      "youtube": "https://www.youtube.com/c/mykompascom",
+      "tiktok": "https://www.tiktok.com/@kompascom?lang=en"
+    },
+    "pages_crawled": [
+      "https://www.kompas.com/konsultasihukum",
+      "https://www.kompas.com/topik-pilihan/list/7782/kalbe-health-corner",
+      "https://www.kompas.com/cekfakta",
+      "https://www.kompas.com/global",
+      "https://www.kompas.com/feedback",
+      "https://www.kompas.com",
+      "https://www.kompas.com/hype"
+    ],
+    "crawl_timestamp": "2025-08-21T10:09:30.595887",
+    "timestamp": "2025-08-21T10:09:30.599262",
+    "id": 10
+  },
+  {
+    "website": "https://www.suarapembaharuan.com",
+    "emails": [],
+    "phones": [],
+    "addresses": [
+      "Kota Besar",
+      "Jalan Di Simpang Lau Paske ",
+      "Jalan SIDIKALANG",
+      "Kota Medan untuk Kesuksesan HUT ke",
+      "kota Sidikalang SIDIKALANG",
+      "jalan Pahlawan tepatnya di Simpang Salak menuju Stadio",
+      "Jalan Menuju Kota Sidikalang Selesai Bulan Juli SIDIKALANG",
+      "Jalan Selambo MEDAN ",
+      "Jalan Ibukota Sidikalang SIDIKALANG",
+      "Jalan Simpang Pamah ",
+      "Kota Sidikalang Selesai Bulan Juli SIDIKALANG",
+      "Jalan Pahlawan Gunakan Pekerja Lokal SIDIKALANG",
+      "Kota Medan Apresiasi MPKWSU NAD dengan berbagai terobosan nya MEDAN ",
+      "Jalan di Sumut"
+    ],
+    "social_links": {},
+    "pages_crawled": [
+      "https://www.suarapembaharuan.com/search/label/Nasional",
+      "https://www.suarapembaharuan.com/search/label/Kriminal",
+      "https://www.suarapembaharuan.com/search/label/",
+      "https://www.suarapembaharuan.com/",
+      "https://www.suarapembaharuan.com",
+      "https://www.suarapembaharuan.com/search/label/Daerah",
+      "https://www.suarapembaharuan.com/search/label/Dairi"
+    ],
+    "crawl_timestamp": "2025-08-21T10:10:25.761901",
+    "timestamp": "2025-08-21T10:10:25.767651",
+    "id": 11
+  },
+  {
+    "website": "https://www.nytimes.com",
+    "emails": [],
+    "phones": [
+      "284862083",
+      "012345678910",
+      "1012345678",
+      "101234567891",
+      "1012345678910"
+    ],
+    "addresses": [
+      "Avenue to observe the nightly march of anti",
+      "City Hall",
+      "City area since January",
+      "Avenue to protest the proposed law"
+    ],
+    "social_links": {},
+    "pages_crawled": [
+      "https://www.nytimes.com#site-content",
+      "https://www.nytimes.com/column/hard-fork",
+      "https://www.nytimes.com/newsletters/books-review",
+      "https://www.nytimes.com#site-index",
+      "https://www.nytimes.com/newsletters/weekender",
+      "https://www.nytimes.com/2025/08/20/magazine/georgia-russia-autocracy-dictatorship.html",
+      "https://www.nytimes.com/2025/08/20/world/europe/john-cruickshank-dead.html",
+      "https://www.nytimes.com",
+      "https://www.nytimes.com/2025/08/20/us/politics/trump-transgender-children-care-subpoena.html",
+      "https://www.nytimes.com/newsletters/serial"
+    ],
+    "crawl_timestamp": "2025-08-21T10:10:45.238699",
+    "timestamp": "2025-08-21T10:10:45.239666",
+    "id": 12
+  },
+  {
+    "website": "https://www.saasquatchleads.com/",
+    "pricing_data": [
+      {
+        "Features": "Monthly Leads",
+        "Free": "5",
+        "Bronze": "50",
+        "Silver": "125",
+        "Gold": "292",
+        "Platinum": "Unlimited",
+        "Custom": "Custom"
+      },
+      {
+        "Features": "Lead Scraping",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Access to Contact Info",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Live Dashboard Analytics",
+        "Free": "\u2714\ufe0f",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Export to CSV/Excel",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Advanced Filters",
+        "Free": "\u2014",
+        "Bronze": "\u2014",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "AI Tools (Email Generation)",
+        "Free": "\u2014",
+        "Bronze": "\u2014",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Priority Support",
+        "Free": "\u2014",
+        "Bronze": "\u2014",
+        "Silver": "\u2014",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Lead Filters",
+        "Free": "\u2014",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Revenue Estimate",
+        "Free": "\u2714\ufe0f",
+        "Bronze": "\u2714\ufe0f",
+        "Silver": "\u2714\ufe0f",
+        "Gold": "\u2714\ufe0f",
+        "Platinum": "\u2714\ufe0f",
+        "Custom": "\u2714\ufe0f"
+      },
+      {
+        "Features": "Price",
+        "Free": "$0/mo",
+        "Bronze": "$19/mo",
+        "Silver": "$49/mo",
+        "Gold": "$99/mo",
+        "Platinum": "$199/mo",
+        "Custom": "Custom"
+      },
+      {
+        "Features": "",
+        "Free": "Continue Free",
+        "Bronze": "Buy now",
+        "Silver": "Buy now",
+        "Gold": "Coming Soon",
+        "Platinum": "Coming Soon",
+        "Custom": "Contact Sales"
+      }
+    ],
+    "emails": [],
+    "phones": [],
+    "social_links": {},
+    "scraper_type": "competitive_analysis",
+    "timestamp": "2025-08-21T16:08:51.781158",
+    "id": 13
+  },
+  {
+    "website": "https:pepsi.co.id",
+    "emails": [],
+    "phones": [],
+    "addresses": [],
+    "social_links": {},
+    "pages_crawled": [
+      "https:pepsi.co.id"
+    ],
+    "crawl_timestamp": "2025-08-21T16:09:34.148121",
+    "timestamp": "2025-08-21T16:09:34.149659",
+    "id": 14
+  },
+  {
+    "website": "https://www.toshiba.com",
+    "emails": [
+      "TIC-Sorter.Sales@toshiba.com",
+      "tic-hev-wixom@toshiba.com",
+      "TIC-upsservice@toshiba.com",
+      "tic-transportation@toshiba.com",
+      "tic-ups-appengr@toshiba.com",
+      "darel.reed@toshiba.com",
+      "d-commercial@toshiba.com",
+      "TIC-Webmaster@toshiba.com",
+      "tic-sorter.sales@toshiba.com",
+      "tic-webmaster@toshiba.com",
+      "tic-service@toshiba.com",
+      "TIC-HEV-Wixom@toshiba.com",
+      "TIC-transportation@TOSHIBA.COM",
+      "Rob.Belle-Isle@toshiba.com",
+      "TIC-UPS-AppEngr@toshiba.com",
+      "Darel.Reed@toshiba.com",
+      "TIC-UPS-RST-CSR@toshiba.com",
+      "analysistic-service@toshiba.com",
+      "TIC-IoTsp@toshiba.com",
+      "rob.belle-isle@toshiba.com",
+      "803-7092tic-service@toshiba.com",
+      "tic-iotsp@toshiba.com",
+      "tic-ups-rst-csr@toshiba.com",
+      "tic-upsservice@toshiba.com",
+      "TIC-T&D-Commercial@toshiba.com",
+      "TIC-Service@toshiba.com"
+    ],
+    "phones": [
+      "19952019",
+      "8558037091",
+      "2527023018",
+      "8558037090",
+      "8558037092",
+      "8558037087",
+      "19952025",
+      "7138965269",
+      "770418002311412",
+      "8778678773",
+      "8023733713",
+      "8558037089",
+      "8002311412",
+      "7138965256",
+      "7138965242",
+      "877867877324"
+    ],
+    "addresses": [
+      "City State Vietnam Virgin Islands "
+    ],
+    "social_links": {
+      "facebook": "https://www.facebook.com/toshibaamerica/",
+      "twitter": "https://twitter.com/toshibaamerica",
+      "youtube": "https://www.youtube.com/user/toshibainnovation",
+      "linkedin": "https://www.linkedin.com/company/toshiba-americas"
+    },
+    "pages_crawled": [
+      "https://www.toshiba.com/tic/industries-served/oil-gas",
+      "https://www.toshiba.com/tic/motors-drives/power-apparatus-components/components/vacuum-contactors",
+      "https://www.toshiba.com/tic/product/",
+      "https://www.toshiba.com/tic/motors-drives",
+      "http://www.toshiba.com/tai/americas/index.jsp",
+      "https://www.toshiba.com/tic",
+      "https://www.toshiba.com/tic/contact-us/find-support",
+      "https://www.toshiba.com/tic/service-warranty/support-contacts",
+      "https://www.toshiba.com",
+      "https://www.toshiba.com/tic/contact-us/request-a-quote"
+    ],
+    "crawl_timestamp": "2025-08-21T16:10:14.917319",
+    "timestamp": "2025-08-21T16:10:14.921931",
+    "id": 15
+  }
+]
