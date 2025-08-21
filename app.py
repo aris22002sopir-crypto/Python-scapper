@@ -137,7 +137,7 @@ elif page == "Competitive Analysis":
     
     if analyze_clicked:
         with st.spinner('Analyzing website...'):
-            hasil = scrape_saasquatch(target_url)
+            hasil = (target_url)
         
         if not hasil['pricing_data'].empty:
             st.success('✅ Analysis completed!')
