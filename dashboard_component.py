@@ -1,39 +1,26 @@
-# dashboard_component.py (updated version with fixed autocomplete)
+# dashboard_component.py (updated version with history.json integration)
 import streamlit as st
 import pandas as pd
 from datetime import datetime
 import json
 import os
-from universal_scraper import scrape_universal_data, save_scraped_data
 
-HISTORY_FILE = "scraping_history.json"
+HISTORY_FILE = "history.json"
 
 def init_history():
     """Initialize the scraping history file if it doesn't exist"""
     if not os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, 'w') as f:
-            json.dump([], f)
-
-def save_to_history(scraping_data):
-    """Save scraping data to history file"""
-    init_history()
-    with open(HISTORY_FILE, 'r') as f:
-        history = json.load(f)
-    
-    scraping_data['timestamp'] = datetime.now().isoformat()
-    scraping_data['id'] = len(history) + 1
-    history.append(scraping_data)
-    
-    with open(HISTORY_FILE, 'w') as f:
-        json.dump(history, f, indent=2)
-    
-    return scraping_data['id']
+        with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+            json.dump([], f, ensure_ascii=False)
 
 def get_history():
-    """Retrieve scraping history"""
+    """Retrieve scraping history from history.json"""
     init_history()
-    with open(HISTORY_FILE, 'r') as f:
-        return json.load(f)
+    try:
+        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except:
+        return []
 
 def clear_history():
     """Clear all scraping history"""
@@ -43,10 +30,8 @@ def clear_history():
     st.rerun()
 
 def show_dashboard():
-    """Show dashboard with scraped website data"""
+    """Show dashboard with scraped website data from history.json"""
     st.title("📊 Analytics Dashboard")
-    
-    # Menghapus bagian input URL karena sudah ada di halaman universal scraper
     
     st.divider()
     
@@ -67,9 +52,9 @@ def show_dashboard():
     with col4:
         total_social = sum(len(item.get('social_links', {})) for item in history)
         st.metric("Social Links", str(total_social))
-    #with col5:
-     #   if st.button("🗑️ Clear All Data", use_container_width=True, type="secondary"):
-      #      clear_history()
+    with col5:
+        total_pricing = sum(len(item.get('pricing_data', [])) for item in history)
+        st.metric("Pricing Plans", str(total_pricing))
     
     st.divider()
     
@@ -136,18 +121,6 @@ def show_dashboard():
                         'Source': scraper_type,
                         'Scrape ID': item.get('id', 'N/A')
                     })
-                elif isinstance(pricing_item, list):
-                    # Handle list format pricing data
-                    pricing_str = ", ".join([str(x) for x in pricing_item])
-                    all_scraped_data.append({
-                        'Website': website,
-                        'Date': date,
-                        'Type': 'Pricing Plan',
-                        'Value': pricing_str,
-                        'URL': website,
-                        'Source': scraper_type,
-                        'Scrape ID': item.get('id', 'N/A')
-                    })
         
         if all_scraped_data:
             # Create DataFrame
@@ -188,12 +161,11 @@ def show_dashboard():
                 )
             
             with filter_col4:
-                # Search filter dengan autocomplete yang benar
+                # Search filter
                 search_term = st.text_input(
                     "Search in Values",
                     placeholder="Enter search term...",
-                    help="Search within the extracted values",
-                    autocomplete="on"  # Menambahkan atribut autocomplete yang valid
+                    help="Search within the extracted values"
                 )
             
             # Apply filters
@@ -257,8 +229,12 @@ def show_dashboard():
     st.subheader("📋 Scraping Sessions")
     if history:
         # Session selection dropdown
-        session_options = {item['id']: f"ID {item['id']} - {item.get('website', 'Unknown')} - {datetime.fromisoformat(item['timestamp']).strftime('%Y-%m-%d %H:%M') if 'timestamp' in item else 'Unknown'}" 
-                          for item in history}
+        session_options = {}
+        for item in history:
+            website = item.get('website', 'Unknown')
+            timestamp = item.get('timestamp', '')
+            date_str = datetime.fromisoformat(timestamp).strftime('%Y-%m-%d %H:%M') if timestamp else 'Unknown'
+            session_options[item['id']] = f"ID {item['id']} - {website} - {date_str}"
         
         selected_session_id = st.selectbox(
             "Select a scraping session to view details:",
@@ -331,4 +307,6 @@ def show_dashboard():
 
 def add_to_history(scraping_data):
     """Add new scraping data to history (alias for save_to_history)"""
-    return save_to_history(scraping_data)
+    # This function is kept for backward compatibility
+    # The actual saving is now handled in app.py
+    return scraping_data.get('id', 'N/A')
