@@ -33,7 +33,7 @@ def save_to_history(data):
     # Membaca data yang sudah ada
     if os.path.exists(history_file):
         try:
-            with open(history_file, 'r') as f:
+            with open(history_file, 'r', encoding='utf-8') as f:
                 history = json.load(f)
         except:
             history = []
@@ -48,10 +48,23 @@ def save_to_history(data):
     history.append(data)
     
     # Menyimpan kembali ke file
-    with open(history_file, 'w') as f:
-        json.dump(history, f, indent=2)
+    with open(history_file, 'w', encoding='utf-8') as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
     
     return data['id']
+
+# Fungsi untuk membaca history
+def load_history():
+    """Membaca data dari file history.json"""
+    history_file = "history.json"
+    
+    if os.path.exists(history_file):
+        try:
+            with open(history_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
 
 # Page configuration
 st.set_page_config(page_title="Caprae - Web Contact Scraper", layout="wide", page_icon="🔍")
