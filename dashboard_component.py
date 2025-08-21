@@ -67,9 +67,9 @@ def show_dashboard():
     with col4:
         total_social = sum(len(item.get('social_links', {})) for item in history)
         st.metric("Social Links", str(total_social))
-    with col5:
-        if st.button("🗑️ Clear All Data", use_container_width=True, type="secondary"):
-            clear_history()
+    #with col5:
+     #   if st.button("🗑️ Clear All Data", use_container_width=True, type="secondary"):
+      #      clear_history()
     
     st.divider()
     
