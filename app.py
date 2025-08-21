@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 import time
+import json
+import os
+from datetime import datetime
 
 from contact_component import show_contact_section
 from universal_scraper import scrape_universal_contact, save_scraped_data
@@ -21,6 +24,34 @@ except ImportError:
             'contact_info': {},
             'error': 'Playwright scraper not available'
         }
+
+# Fungsi baru untuk menyimpan ke history.json
+def save_to_history(data):
+    """Menyimpan data scraping ke file history.json"""
+    history_file = "history.json"
+    
+    # Membaca data yang sudah ada
+    if os.path.exists(history_file):
+        try:
+            with open(history_file, 'r') as f:
+                history = json.load(f)
+        except:
+            history = []
+    else:
+        history = []
+    
+    # Menambahkan timestamp dan ID unik
+    data['timestamp'] = datetime.now().isoformat()
+    data['id'] = len(history) + 1
+    
+    # Menambahkan data baru ke history
+    history.append(data)
+    
+    # Menyimpan kembali ke file
+    with open(history_file, 'w') as f:
+        json.dump(history, f, indent=2)
+    
+    return data['id']
 
 # Page configuration
 st.set_page_config(page_title="Caprae - Web Contact Scraper", layout="wide", page_icon="🔍")
@@ -183,8 +214,8 @@ elif page == "Universal Contact Scraper":
         else:
             st.success(f"✅ Successfully extracted from {result['website']}")
             
-            # Save to history
-            history_id = add_to_history(result)
+            # Save to history menggunakan fungsi baru
+            history_id = save_to_history(result)
             st.info(f"Scraping saved to history with ID: {history_id}")
             
             # Results horizontal layout
@@ -276,7 +307,7 @@ elif page == "Competitive Analysis":
             for _, row in hasil['pricing_data'].iterrows():
                 pricing_data_list.append(row.to_dict())
             
-            # Save to history
+            # Save to history menggunakan fungsi baru
             history_entry = {
                 'website': target_url,
                 'pricing_data': pricing_data_list,
@@ -285,7 +316,7 @@ elif page == "Competitive Analysis":
                 'social_links': {},
                 'scraper_type': 'competitive_analysis'
             }
-            history_id = add_to_history(history_entry)
+            history_id = save_to_history(history_entry)
             st.info(f"Analysis saved to history with ID: {history_id}")
             
             # Results horizontal
