@@ -3,6 +3,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import re
 
 from contact_component import show_contact_section
 from universal_scraper import scrape_universal_contact, save_scraped_data
@@ -45,7 +46,7 @@ def scrape_pricing_data(url):
         soup = BeautifulSoup(response.content, 'html.parser')
         
         # Find the pricing table
-        pricing_table = soup.find('table', {'class': 'jsx-c15ddf1490db7a4f'})
+        pricing_table = soup.find('table', class_=re.compile('jsx-'))
         
         if not pricing_table:
             return {
@@ -55,7 +56,9 @@ def scrape_pricing_data(url):
         
         # Extract table headers (plan names)
         headers = []
-        header_cells = pricing_table.find('thead').find_all('th')
+        header_row = pricing_table.find('thead').find('tr')
+        header_cells = header_row.find_all('th')
+        
         for cell in header_cells:
             header_text = cell.get_text(strip=True)
             if header_text and header_text != 'Features':
@@ -66,42 +69,84 @@ def scrape_pricing_data(url):
         rows = pricing_table.find('tbody').find_all('tr')
         
         for row in rows:
-            feature_cells = row.find_all('td')
-            if len(feature_cells) > 1:
-                feature_name = feature_cells[0].get_text(strip=True)
-                feature_values = [cell.get_text(strip=True) for cell in feature_cells[1:]]
+            cells = row.find_all(['th', 'td'])
+            if len(cells) > 1:
+                feature_name = cells[0].get_text(strip=True)
                 
-                # Convert checkmarks to standardized format
-                standardized_values = []
-                for value in feature_values:
-                    if '✔️' in value or '✔' in value:
-                        standardized_values.append('✅')
-                    elif '—' in value or value == '':
-                        standardized_values.append('❌')
+                # Extract values from remaining cells
+                feature_values = []
+                for i in range(1, len(cells)):
+                    cell_text = cells[i].get_text(strip=True)
+                    # Check for checkmarks (could be emoji or text)
+                    if '✔' in cell_text or 'check' in cell_text.lower() or 'included' in cell_text.lower():
+                        feature_values.append('✅')
+                    elif '—' in cell_text or 'not' in cell_text.lower() or 'unavailable' in cell_text.lower() or cell_text == '':
+                        feature_values.append('❌')
                     else:
-                        standardized_values.append(value)
+                        feature_values.append(cell_text)
+                
+                # Ensure we have the right number of values
+                if len(feature_values) < len(headers):
+                    feature_values.extend(['❌'] * (len(headers) - len(feature_values)))
+                elif len(feature_values) > len(headers):
+                    feature_values = feature_values[:len(headers)]
                 
                 features_data.append({
                     'Feature': feature_name,
-                    **dict(zip(headers, standardized_values))
+                    **dict(zip(headers, feature_values))
                 })
         
         # Extract prices from the footer
         footer = pricing_table.find('tfoot')
         if footer:
-            price_row = footer.find_all('tr')[0]
-            price_cells = price_row.find_all('td')[1:]  # Skip the first cell ("Price")
+            price_rows = footer.find_all('tr')
+            if price_rows:
+                price_cells = price_rows[0].find_all(['th', 'td'])
+                if len(price_cells) > 1:
+                    prices = {}
+                    for i, cell in enumerate(price_cells[1:], 1):  # Start from index 1 to skip "Price" label
+                        if i-1 < len(headers):
+                            prices[headers[i-1]] = cell.get_text(strip=True)
+                    
+                    # Add pricing row
+                    features_data.append({
+                        'Feature': 'Price',
+                        **prices
+                    })
+        
+        # If we couldn't extract data with the first method, try a different approach
+        if not features_data:
+            # Alternative approach: extract all text and try to parse
+            all_text = pricing_table.get_text()
+            lines = [line.strip() for line in all_text.split('\n') if line.strip()]
             
+            # Look for plan names and prices
+            plan_pattern = r'(Free|Bronze|Silver|Gold|Platinum|Custom)'
+            price_pattern = r'(\$[\d,]+(\.[\d]{2})?\/mo|\$[\d,]+(\.[\d]{2})?\/year|Custom)'
+            
+            plans = []
             prices = {}
-            for i, cell in enumerate(price_cells):
-                if i < len(headers):
-                    prices[headers[i]] = cell.get_text(strip=True)
             
-            # Add pricing row
-            features_data.append({
-                'Feature': 'Price',
-                **prices
-            })
+            for line in lines:
+                if re.search(plan_pattern, line, re.IGNORECASE):
+                    plans.append(line)
+                elif re.search(price_pattern, line):
+                    price_match = re.search(price_pattern, line)
+                    # Try to associate price with plan
+                    for plan in plans:
+                        if plan in line:
+                            prices[plan] = price_match.group(1)
+            
+            # Create a simple dataframe if we found plans and prices
+            if plans and prices:
+                features_data.append({
+                    'Feature': 'Plans',
+                    **{plan: plan for plan in plans}
+                })
+                features_data.append({
+                    'Feature': 'Price',
+                    **prices
+                })
         
         return {
             'pricing_data': pd.DataFrame(features_data),
