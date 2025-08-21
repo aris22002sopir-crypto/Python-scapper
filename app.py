@@ -4,10 +4,23 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
+import time
 
 from contact_component import show_contact_section
 from universal_scraper import scrape_universal_contact, save_scraped_data
 from dashboard_component import show_dashboard, add_to_history
+
+# Import fungsi scraper yang menggunakan Playwright
+try:
+    from scraper import scrape_saasquatch
+except ImportError:
+    # Fallback jika modul tidak ada
+    def scrape_saasquatch(url):
+        return {
+            'pricing_data': pd.DataFrame(),
+            'contact_info': {},
+            'error': 'Playwright scraper not available'
+        }
 
 # Page configuration
 st.set_page_config(page_title="Caprae - Web Contact Scraper", layout="wide", page_icon="🔍")
@@ -34,7 +47,18 @@ page = st.sidebar.radio("Navigate to", ["Dashboard", "Universal Contact Scraper"
 def scrape_pricing_data(url):
     """
     Scrapes pricing data from the SaaSquatchLeads website.
+    Menggunakan kombinasi Requests + Playwright untuk hasil terbaik.
     """
+    # Pertama coba dengan Playwright (lebih powerful untuk JavaScript sites)
+    playwright_result = scrape_saasquatch(url)
+    
+    if playwright_result and 'pricing_data' in playwright_result and not playwright_result['pricing_data'].empty:
+        return {
+            'pricing_data': playwright_result['pricing_data'],
+            'error': None
+        }
+    
+    # Fallback ke Requests + BeautifulSoup jika Playwright gagal
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -57,54 +81,56 @@ def scrape_pricing_data(url):
         # Extract table headers (plan names)
         headers = []
         header_row = pricing_table.find('thead').find('tr')
-        header_cells = header_row.find_all('th')
-        
-        for cell in header_cells:
-            header_text = cell.get_text(strip=True)
-            if header_text and header_text != 'Features':
-                headers.append(header_text)
+        if header_row:
+            header_cells = header_row.find_all('th')
+            for cell in header_cells:
+                header_text = cell.get_text(strip=True)
+                if header_text and header_text != 'Features':
+                    headers.append(header_text)
         
         # Extract table rows (features)
         features_data = []
-        rows = pricing_table.find('tbody').find_all('tr')
-        
-        for row in rows:
-            cells = row.find_all(['th', 'td'])
-            if len(cells) > 1:
-                feature_name = cells[0].get_text(strip=True)
-                
-                # Extract values from remaining cells
-                feature_values = []
-                for i in range(1, len(cells)):
-                    cell_text = cells[i].get_text(strip=True)
-                    # Check for checkmarks (could be emoji or text)
-                    if '✔' in cell_text or 'check' in cell_text.lower() or 'included' in cell_text.lower():
-                        feature_values.append('✅')
-                    elif '—' in cell_text or 'not' in cell_text.lower() or 'unavailable' in cell_text.lower() or cell_text == '':
-                        feature_values.append('❌')
-                    else:
-                        feature_values.append(cell_text)
-                
-                # Ensure we have the right number of values
-                if len(feature_values) < len(headers):
-                    feature_values.extend(['❌'] * (len(headers) - len(feature_values)))
-                elif len(feature_values) > len(headers):
-                    feature_values = feature_values[:len(headers)]
-                
-                features_data.append({
-                    'Feature': feature_name,
-                    **dict(zip(headers, feature_values))
-                })
+        tbody = pricing_table.find('tbody')
+        if tbody:
+            rows = tbody.find_all('tr')
+            for row in rows:
+                cells = row.find_all(['th', 'td'])
+                if len(cells) > 1:
+                    feature_name = cells[0].get_text(strip=True)
+                    
+                    # Extract values from remaining cells
+                    feature_values = []
+                    for i in range(1, len(cells)):
+                        cell_text = cells[i].get_text(strip=True)
+                        # Check for checkmarks
+                        if '✔' in cell_text or any(word in cell_text.lower() for word in ['check', 'included', 'yes', 'true']):
+                            feature_values.append('✅')
+                        elif any(word in cell_text.lower() for word in ['—', 'not', 'unavailable', 'no', 'false', 'none']) or cell_text == '':
+                            feature_values.append('❌')
+                        else:
+                            feature_values.append(cell_text)
+                    
+                    # Ensure we have the right number of values
+                    if len(feature_values) < len(headers):
+                        feature_values.extend(['❌'] * (len(headers) - len(feature_values)))
+                    elif len(feature_values) > len(headers):
+                        feature_values = feature_values[:len(headers)]
+                    
+                    if headers:  # Only add if we have headers
+                        features_data.append({
+                            'Feature': feature_name,
+                            **dict(zip(headers, feature_values))
+                        })
         
         # Extract prices from the footer
         footer = pricing_table.find('tfoot')
         if footer:
             price_rows = footer.find_all('tr')
-            if price_rows:
+            if price_rows and price_rows[0]:
                 price_cells = price_rows[0].find_all(['th', 'td'])
-                if len(price_cells) > 1:
+                if len(price_cells) > 1 and headers:
                     prices = {}
-                    for i, cell in enumerate(price_cells[1:], 1):  # Start from index 1 to skip "Price" label
+                    for i, cell in enumerate(price_cells[1:], 1):
                         if i-1 < len(headers):
                             prices[headers[i-1]] = cell.get_text(strip=True)
                     
@@ -114,44 +140,16 @@ def scrape_pricing_data(url):
                         **prices
                     })
         
-        # If we couldn't extract data with the first method, try a different approach
-        if not features_data:
-            # Alternative approach: extract all text and try to parse
-            all_text = pricing_table.get_text()
-            lines = [line.strip() for line in all_text.split('\n') if line.strip()]
-            
-            # Look for plan names and prices
-            plan_pattern = r'(Free|Bronze|Silver|Gold|Platinum|Custom)'
-            price_pattern = r'(\$[\d,]+(\.[\d]{2})?\/mo|\$[\d,]+(\.[\d]{2})?\/year|Custom)'
-            
-            plans = []
-            prices = {}
-            
-            for line in lines:
-                if re.search(plan_pattern, line, re.IGNORECASE):
-                    plans.append(line)
-                elif re.search(price_pattern, line):
-                    price_match = re.search(price_pattern, line)
-                    # Try to associate price with plan
-                    for plan in plans:
-                        if plan in line:
-                            prices[plan] = price_match.group(1)
-            
-            # Create a simple dataframe if we found plans and prices
-            if plans and prices:
-                features_data.append({
-                    'Feature': 'Plans',
-                    **{plan: plan for plan in plans}
-                })
-                features_data.append({
-                    'Feature': 'Price',
-                    **prices
-                })
-        
-        return {
-            'pricing_data': pd.DataFrame(features_data),
-            'error': None
-        }
+        if features_data:
+            return {
+                'pricing_data': pd.DataFrame(features_data),
+                'error': None
+            }
+        else:
+            return {
+                'pricing_data': pd.DataFrame(),
+                'error': 'No pricing data could be extracted'
+            }
         
     except Exception as e:
         return {
@@ -303,7 +301,7 @@ elif page == "Competitive Analysis":
             
             with insight_col1:
                 st.metric("Total Plans", len(hasil['pricing_data'].columns) - 1)
-                st.metric("Features Tracked", len(hasil['pricing_data']) - 1)  # Subtract 1 for the price row
+                st.metric("Features Tracked", len(hasil['pricing_data']) - 1)
             
             with insight_col2:
                 # Find the price row
