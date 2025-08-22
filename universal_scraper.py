@@ -5,6 +5,11 @@ import json
 import os
 from urllib.parse import urlparse, urljoin
 from datetime import datetime
+import warnings
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+# Suppress only the single warning from urllib3 needed
+warnings.filterwarnings('ignore', category=InsecureRequestWarning)
 
 def scrape_universal_contact(url):
     """
@@ -15,7 +20,8 @@ def scrape_universal_contact(url):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         
-        response = requests.get(url, headers=headers, timeout=30)
+        # Tambahkan verify=False untuk menangani error SSL
+        response = requests.get(url, headers=headers, timeout=30, verify=False)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
