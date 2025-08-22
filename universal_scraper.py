@@ -7,6 +7,8 @@ from urllib.parse import urlparse, urljoin
 from datetime import datetime
 import warnings
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import ssl
+import certifi
 
 # Suppress only the single warning from urllib3 needed
 warnings.filterwarnings('ignore', category=InsecureRequestWarning)
@@ -20,32 +22,44 @@ def scrape_universal_contact(url):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         
-        # Tambahkan verify=False untuk menangani error SSL
-        response = requests.get(url, headers=headers, timeout=30, verify=False)
-        response.raise_for_status()
+        # Coba dengan certificate bundle yang benar terlebih dahulu
+        try:
+            response = requests.get(url, headers=headers, timeout=30, verify=certifi.where())
+            response.raise_for_status()
+        except requests.exceptions.SSLError:
+            # Fallback ke verify=False jika certificate bundle tidak bekerja
+            response = requests.get(url, headers=headers, timeout=30, verify=False)
+            response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Extract emails
+        # Extract emails - pattern sudah benar
         email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         emails = re.findall(email_pattern, response.text)
         emails = list(set(emails))  # Remove duplicates
         
-        # Extract phone numbers - improved pattern
-        # Pattern untuk nomor telepon internasional dan lokal
+        # Extract phone numbers - PERBAIKI PATTERN UNTUK KODE AREA
         phone_patterns = [
             # Format internasional: +xx xxxx xxxx, +xx xxxx xxxx, +xx (0) xxxx xxxx
             r'\+\d{1,3}[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}[\s\-]?\d{1,9}',
-            # Format lokal dengan kode area: (xxx) xxxx-xxxx, xxx-xxxx-xxxx, xxx.xxxx.xxxx
-            r'\(?\d{3,4}\)?[\s\-.]?\d{3,4}[\s\-.]?\d{3,4}',
+            # Format dengan kode area: (021) 123-4567, 021-123-4567, 021.123.4567
+            r'\(?(\d{2,4})\)?[\s\-.]?(\d{3,4})[\s\-.]?(\d{3,4})',
+            # Format tanpa kode area (minimal 7 digit): 123-4567, 1234567
+            r'\b\d{3}[\s\-.]?\d{4}\b',
             # Format dengan kata "tel", "phone", atau "call"
-            r'(?:tel|phone|call)[\s::\-]+\(?(\+?\d{1,3}[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}[\s\-]?\d{1,9})\)?',
+            r'(?:tel|phone|call|telepon)[\s::\-]+\(?([\+]?\d{1,3}[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}[\s\-]?\d{1,9})\)?',
         ]
         
         phones = []
         for pattern in phone_patterns:
-            found_phones = re.findall(pattern, response.text, re.IGNORECASE)
-            phones.extend(found_phones)
+            found_phones = re.finditer(pattern, response.text, re.IGNORECASE)
+            for match in found_phones:
+                # Ambil seluruh match atau group pertama jika ada grouping
+                if match.groups():
+                    phone = ''.join([g for g in match.groups() if g])
+                else:
+                    phone = match.group(0)
+                phones.append(phone)
         
         # Bersihkan dan format nomor telepon
         cleaned_phones = []
@@ -53,23 +67,29 @@ def scrape_universal_contact(url):
             # Hapus karakter non-digit kecuali tanda +
             cleaned_phone = re.sub(r'[^\d+]', '', phone)
             
-            # Validasi panjang nomor (minimal 5 digit untuk landline, maksimal 16 digit internasional)
-            if 5 <= len(cleaned_phone.replace('+', '')) <= 16:
+            # Validasi panjang nomor (minimal 7 digit, maksimal 16 digit)
+            if 7 <= len(cleaned_phone.replace('+', '')) <= 16:
                 # Format yang lebih rapi
                 if cleaned_phone.startswith('+'):
                     # Format internasional: +XX XXX XXX XXXX
-                    if len(cleaned_phone) > 4:
-                        formatted_phone = f"{cleaned_phone[:3]} {cleaned_phone[3:6]} {cleaned_phone[6:9]} {cleaned_phone[9:]}"
-                    else:
-                        formatted_phone = cleaned_phone
+                    digits = cleaned_phone.replace('+', '')
+                    formatted_phone = f"+{digits[:2]} {digits[2:5]} {digits[5:8]} {digits[8:]}"
                 else:
-                    # Format lokal: XXX-XXX-XXXX
-                    if len(cleaned_phone) == 10:
-                        formatted_phone = f"{cleaned_phone[:3]}-{cleaned_phone[3:6]}-{cleaned_phone[6:]}"
-                    elif len(cleaned_phone) == 11:
-                        formatted_phone = f"{cleaned_phone[:4]}-{cleaned_phone[4:7]}-{cleaned_phone[7:]}"
+                    # Format lokal dengan kode area
+                    if len(cleaned_phone) >= 10:
+                        # Format: XXX-XXXX-XXXX atau XX-XXXX-XXXX
+                        kode_area = cleaned_phone[:3] if len(cleaned_phone) >= 11 else cleaned_phone[:2]
+                        nomor = cleaned_phone[len(kode_area):]
+                        
+                        if len(nomor) == 7:
+                            formatted_phone = f"{kode_area}-{nomor[:3]}-{nomor[3:]}"
+                        elif len(nomor) == 8:
+                            formatted_phone = f"{kode_area}-{nomor[:4]}-{nomor[4:]}"
+                        else:
+                            formatted_phone = f"{kode_area}-{nomor}"
                     else:
-                        formatted_phone = cleaned_phone
+                        # Format tanpa kode area: XXX-XXXX
+                        formatted_phone = f"{cleaned_phone[:3]}-{cleaned_phone[3:]}"
                 
                 cleaned_phones.append(formatted_phone.strip())
         
