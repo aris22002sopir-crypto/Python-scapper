@@ -1,4 +1,3 @@
-# app.py
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
@@ -25,46 +24,8 @@ except ImportError:
             'error': 'Playwright scraper not available'
         }
 
-# Fungsi baru untuk menyimpan ke history.json
-def save_to_history(data):
-    """Menyimpan data scraping ke file history.json"""
-    history_file = "history.json"
-    
-    # Membaca data yang sudah ada
-    if os.path.exists(history_file):
-        try:
-            with open(history_file, 'r', encoding='utf-8') as f:
-                history = json.load(f)
-        except:
-            history = []
-    else:
-        history = []
-    
-    # Menambahkan timestamp dan ID unik
-    data['timestamp'] = datetime.now().isoformat()
-    data['id'] = len(history) + 1
-    
-    # Menambahkan data baru ke history
-    history.append(data)
-    
-    # Menyimpan kembali ke file
-    with open(history_file, 'w', encoding='utf-8') as f:
-        json.dump(history, f, indent=2, ensure_ascii=False)
-    
-    return data['id']
-
-# Fungsi untuk membaca history
-def load_history():
-    """Membaca data dari file history.json"""
-    history_file = "history.json"
-    
-    if os.path.exists(history_file):
-        try:
-            with open(history_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except:
-            return []
-    return []
+# HAPUS fungsi save_to_history dan load_history yang duplicate
+# karena sudah ada di dashboard_component
 
 # Page configuration
 st.set_page_config(page_title="Caprae - Web Contact Scraper", layout="wide", page_icon="🔍")
@@ -227,8 +188,8 @@ elif page == "Universal Contact Scraper":
         else:
             st.success(f"✅ Successfully extracted from {result['website']}")
             
-            # Save to history menggunakan fungsi baru
-            history_id = save_to_history(result)
+            # Save to history menggunakan fungsi dari dashboard_component
+            history_id = add_to_history(result)
             st.info(f"Scraping saved to history with ID: {history_id}")
             
             # Results horizontal layout
@@ -306,7 +267,7 @@ elif page == "Competitive Analysis":
         target_url = st.text_input("Target URL for analysis", value="https://www.saasquatchleads.com/")
     
     with button_col:
-        analyze_clicked = st.button("Analyze Pricing", type="primary", use_container_width=True)
+        analyze_clicked = st.button("Analyze Pricing", type="primary', use_container_width=True)
     
     if analyze_clicked:
         with st.spinner('Analyzing website and extracting pricing data...'):
@@ -320,7 +281,7 @@ elif page == "Competitive Analysis":
             for _, row in hasil['pricing_data'].iterrows():
                 pricing_data_list.append(row.to_dict())
             
-            # Save to history menggunakan fungsi baru
+            # Save to history menggunakan fungsi dari dashboard_component
             history_entry = {
                 'website': target_url,
                 'pricing_data': pricing_data_list,
@@ -329,7 +290,7 @@ elif page == "Competitive Analysis":
                 'social_links': {},
                 'scraper_type': 'competitive_analysis'
             }
-            history_id = save_to_history(history_entry)
+            history_id = add_to_history(history_entry)
             st.info(f"Analysis saved to history with ID: {history_id}")
             
             # Results horizontal
