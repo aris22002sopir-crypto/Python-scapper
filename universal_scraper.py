@@ -71,38 +71,14 @@ def scrape_universal_contact(url):
             'scraper_type': 'universal'
         }
         
-        # Save to history
-        save_to_scraping_history(result)
+        # Save to history using dashboard_component function
+        from dashboard_component import add_to_history
+        result['id'] = add_to_history(result)
         
         return result
         
     except Exception as e:
         return {'error': f'Failed to scrape website: {str(e)}'}
 
-def save_to_scraping_history(scraping_data):
-    """
-    Save scraping data to scraping_history.json permanently
-    """
-    history_file = "scraping_history.json"
-    
-    # Read existing history
-    if os.path.exists(history_file):
-        try:
-            with open(history_file, 'r', encoding='utf-8') as f:
-                history = json.load(f)
-        except:
-            history = []
-    else:
-        history = []
-    
-    # Add ID to the new data
-    scraping_data['id'] = len(history) + 1
-    
-    # Add to history
-    history.append(scraping_data)
-    
-    # Save back to file
-    with open(history_file, 'w', encoding='utf-8') as f:
-        json.dump(history, f, indent=2, ensure_ascii=False)
-    
-    return scraping_data['id']
+# Fungsi save_scraped_data tidak diperlukan lagi karena sudah terintegrasi
+# Data langsung disimpan melalui add_to_history dalam fungsi scrape_universal_contact
