@@ -3,26 +3,42 @@ import pandas as pd
 from datetime import datetime
 import json
 import os
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 HISTORY_FILE = "scraping_history.json"
 
 def init_history():
     """Initialize the scraping history file if it doesn't exist"""
-    if not os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
-            json.dump([], f, ensure_ascii=False)
+    try:
+        if not os.path.exists(HISTORY_FILE):
+            with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+                json.dump([], f, ensure_ascii=False, indent=2)
+            logger.info(f"Created new history file: {HISTORY_FILE}")
+        else:
+            logger.info(f"History file already exists: {HISTORY_FILE}")
+    except Exception as e:
+        logger.error(f"Error initializing history file: {str(e)}")
+        st.error(f"Error initializing history file: {str(e)}")
 
 def get_history():
     """Retrieve scraping history from scraping_history.json"""
     init_history()
     try:
         with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except:
+            history_data = json.load(f)
+            logger.info(f"Loaded {len(history_data)} records from history file")
+            return history_data
+    except json.JSONDecodeError:
+        logger.warning("History file contains invalid JSON, returning empty list")
         return []
-
-# HAPUS fungsi clear_history() untuk mencegah penghapusan data
-# Fungsi ini tidak boleh ada dalam kode yang di-deploy
+    except Exception as e:
+        logger.error(f"Error reading history file: {str(e)}")
+        st.error(f"Error reading history data: {str(e)}")
+        return []
 
 def show_dashboard():
     """Show dashboard with scraped website data from scraping_history.json"""
@@ -66,7 +82,13 @@ def show_dashboard():
         for item in history:
             website = item.get('website', 'Unknown')
             timestamp = item.get('timestamp', '')
-            date = datetime.fromisoformat(timestamp).strftime('%Y-%m-%d %H:%M') if timestamp else 'Unknown'
+            
+            # Handle timestamp conversion safely
+            try:
+                date = datetime.fromisoformat(timestamp).strftime('%Y-%m-%d %H:%M') if timestamp else 'Unknown'
+            except (ValueError, TypeError):
+                date = 'Unknown'
+                
             scraper_type = item.get('scraper_type', 'universal')
             
             # Add emails
@@ -167,11 +189,14 @@ def show_dashboard():
                 )
             
             # Apply filters
-            filtered_df = scraped_df[
-                (scraped_df['Website'].isin(selected_websites)) &
-                (scraped_df['Type'].isin(selected_types)) &
-                (scraped_df['Source'].isin(selected_sources))
-            ]
+            if selected_websites and selected_types and selected_sources:
+                filtered_df = scraped_df[
+                    (scraped_df['Website'].isin(selected_websites)) &
+                    (scraped_df['Type'].isin(selected_types)) &
+                    (scraped_df['Source'].isin(selected_sources))
+                ]
+            else:
+                filtered_df = scraped_df
             
             # Apply search filter if provided
             if search_term:
@@ -231,7 +256,13 @@ def show_dashboard():
         for item in history:
             website = item.get('website', 'Unknown')
             timestamp = item.get('timestamp', '')
-            date_str = datetime.fromisoformat(timestamp).strftime('%Y-%m-%d %H:%M') if timestamp else 'Unknown'
+            
+            # Handle timestamp conversion safely
+            try:
+                date_str = datetime.fromisoformat(timestamp).strftime('%Y-%m-%d %H:%M') if timestamp else 'Unknown'
+            except (ValueError, TypeError):
+                date_str = 'Unknown'
+                
             session_options[item['id']] = f"ID {item['id']} - {website} - {date_str}"
         
         selected_session_id = st.selectbox(
@@ -250,7 +281,15 @@ def show_dashboard():
                 st.write("**Session Overview**")
                 st.write(f"**Website:** {selected_session.get('website', 'Unknown')}")
                 st.write(f"**URL:** {selected_session.get('url', 'N/A')}")
-                st.write(f"**Date:** {datetime.fromisoformat(selected_session['timestamp']).strftime('%Y-%m-%d %H:%M') if 'timestamp' in selected_session else 'Unknown'}")
+                
+                # Handle timestamp conversion safely
+                try:
+                    timestamp = selected_session.get('timestamp', '')
+                    date_str = datetime.fromisoformat(timestamp).strftime('%Y-%m-%d %H:%M') if timestamp else 'Unknown'
+                except (ValueError, TypeError):
+                    date_str = 'Unknown'
+                    
+                st.write(f"**Date:** {date_str}")
                 st.write(f"**Scraper Type:** {selected_session.get('scraper_type', 'universal').replace('_', ' ').title()}")
                 st.write(f"**Session ID:** {selected_session.get('id', 'N/A')}")
             
@@ -306,17 +345,24 @@ def show_dashboard():
 
 def add_to_history(scraping_data):
     """Add new scraping data to history"""
-    history = get_history()
-    
-    # Add timestamp and ID
-    scraping_data['timestamp'] = datetime.now().isoformat()
-    scraping_data['id'] = len(history) + 1
-    
-    # Add to history
-    history.append(scraping_data)
-    
-    # Save back to file
-    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
-        json.dump(history, f, indent=2, ensure_ascii=False)
-    
-    return scraping_data['id']
+    try:
+        history = get_history()
+        
+        # Add timestamp and ID
+        scraping_data['timestamp'] = datetime.now().isoformat()
+        scraping_data['id'] = len(history) + 1
+        
+        # Add to history
+        history.append(scraping_data)
+        
+        # Save back to file
+        with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+            json.dump(history, f, indent=2, ensure_ascii=False)
+        
+        logger.info(f"Added new scraping data to history with ID: {scraping_data['id']}")
+        return scraping_data['id']
+        
+    except Exception as e:
+        logger.error(f"Error adding data to history: {str(e)}")
+        st.error(f"Error saving scraping data: {str(e)}")
+        return None
