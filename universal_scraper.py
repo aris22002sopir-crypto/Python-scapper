@@ -71,14 +71,13 @@ def scrape_universal_contact(url):
             'scraper_type': 'universal'
         }
         
-        # Save to history using dashboard_component function
-        from dashboard_component import add_to_history
-        result['id'] = add_to_history(result)
-        
         return result
         
     except Exception as e:
         return {'error': f'Failed to scrape website: {str(e)}'}
 
-# Fungsi save_scraped_data tidak diperlukan lagi karena sudah terintegrasi
-# Data langsung disimpan melalui add_to_history dalam fungsi scrape_universal_contact
+# Fungsi save_scraped_data untuk kompatibilitas dengan app.py yang lama
+def save_scraped_data(data):
+    """Save scraped data to history - for backward compatibility"""
+    from dashboard_component import add_to_history
+    return add_to_history(data)
