@@ -1,11 +1,10 @@
-# dashboard_component.py (updated version with history.json integration)
 import streamlit as st
 import pandas as pd
 from datetime import datetime
 import json
 import os
 
-HISTORY_FILE = "history.json"
+HISTORY_FILE = "scraping_history.json"
 
 def init_history():
     """Initialize the scraping history file if it doesn't exist"""
@@ -14,7 +13,7 @@ def init_history():
             json.dump([], f, ensure_ascii=False)
 
 def get_history():
-    """Retrieve scraping history from history.json"""
+    """Retrieve scraping history from scraping_history.json"""
     init_history()
     try:
         with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
@@ -22,16 +21,15 @@ def get_history():
     except:
         return []
 
-def clear_history():
-    """Clear all scraping history"""
-    if os.path.exists(HISTORY_FILE):
-        os.remove(HISTORY_FILE)
-    st.success("History cleared successfully!")
-    st.rerun()
+# HAPUS fungsi clear_history() untuk mencegah penghapusan data
+# Fungsi ini tidak boleh ada dalam kode yang di-deploy
 
 def show_dashboard():
-    """Show dashboard with scraped website data from history.json"""
+    """Show dashboard with scraped website data from scraping_history.json"""
     st.title("📊 Analytics Dashboard")
+    
+    # Security notice - no delete functionality
+    st.success("🔒 Data Protection: History is permanent and cannot be deleted")
     
     st.divider()
     
@@ -78,7 +76,7 @@ def show_dashboard():
                     'Date': date,
                     'Type': 'Email',
                     'Value': email,
-                    'URL': website,
+                    'URL': item.get('url', website),
                     'Source': scraper_type,
                     'Scrape ID': item.get('id', 'N/A')
                 })
@@ -90,7 +88,7 @@ def show_dashboard():
                     'Date': date,
                     'Type': 'Phone',
                     'Value': phone,
-                    'URL': website,
+                    'URL': item.get('url', website),
                     'Source': scraper_type,
                     'Scrape ID': item.get('id', 'N/A')
                 })
@@ -102,7 +100,7 @@ def show_dashboard():
                     'Date': date,
                     'Type': f'Social ({platform})',
                     'Value': link,
-                    'URL': website,
+                    'URL': item.get('url', website),
                     'Source': scraper_type,
                     'Scrape ID': item.get('id', 'N/A')
                 })
@@ -117,7 +115,7 @@ def show_dashboard():
                         'Date': date,
                         'Type': 'Pricing Plan',
                         'Value': pricing_str,
-                        'URL': website,
+                        'URL': item.get('url', website),
                         'Source': scraper_type,
                         'Scrape ID': item.get('id', 'N/A')
                     })
@@ -188,7 +186,7 @@ def show_dashboard():
                 use_container_width=True,
                 hide_index=True,
                 column_config={
-                    "URL": st.column_config.LinkColumn("Website"),
+                    "URL": st.column_config.LinkColumn("Website URL"),
                     "Value": st.column_config.TextColumn("Extracted Value", width="large"),
                     "Scrape ID": st.column_config.NumberColumn("Scrape Session ID", format="%d")
                 }
@@ -251,6 +249,7 @@ def show_dashboard():
             with session_col1:
                 st.write("**Session Overview**")
                 st.write(f"**Website:** {selected_session.get('website', 'Unknown')}")
+                st.write(f"**URL:** {selected_session.get('url', 'N/A')}")
                 st.write(f"**Date:** {datetime.fromisoformat(selected_session['timestamp']).strftime('%Y-%m-%d %H:%M') if 'timestamp' in selected_session else 'Unknown'}")
                 st.write(f"**Scraper Type:** {selected_session.get('scraper_type', 'universal').replace('_', ' ').title()}")
                 st.write(f"**Session ID:** {selected_session.get('id', 'N/A')}")
@@ -306,7 +305,18 @@ def show_dashboard():
         st.info("No scraping history yet")
 
 def add_to_history(scraping_data):
-    """Add new scraping data to history (alias for save_to_history)"""
-    # This function is kept for backward compatibility
-    # The actual saving is now handled in app.py
-    return scraping_data.get('id', 'N/A')
+    """Add new scraping data to history"""
+    history = get_history()
+    
+    # Add timestamp and ID
+    scraping_data['timestamp'] = datetime.now().isoformat()
+    scraping_data['id'] = len(history) + 1
+    
+    # Add to history
+    history.append(scraping_data)
+    
+    # Save back to file
+    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
+    
+    return scraping_data['id']
