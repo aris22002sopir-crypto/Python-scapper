@@ -8,6 +8,10 @@ import json
 import os
 from datetime import datetime
 
+# Impor fungsi yang benar dari modul
+from dashboard_component import show_dashboard, add_to_history
+from universal_scraper import scrape_universal_contact, save_scraped_data
+
 # Page configuration
 st.set_page_config(page_title="Caprae - Web Contact Scraper", layout="wide", page_icon="🔍")
 
@@ -25,7 +29,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Simulasi komponen yang diimpor (karena file aslinya tidak ada)
+# Simulasi komponen contact (karena file aslinya tidak ada)
 def show_contact_section():
     st.title("📞 Contact Us")
     st.write("""
@@ -35,52 +39,6 @@ def show_contact_section():
     **Phone:** +1 (555) 123-4567  
     **Address:** 123 Business Ave, Suite 100, San Francisco, CA
     """)
-
-def scrape_universal_contact(url):
-    """Simulasi fungsi scraping kontak universal"""
-    # Ini adalah contoh sederhana, pada implementasi nyata akan melakukan scraping sebenarnya
-    return {
-        'website': url,
-        'emails': ['contact@example.com', 'info@example.com'],
-        'phones': ['+1-555-0123', '+1-555-4567'],
-        'social_links': {
-            'twitter': 'https://twitter.com/example',
-            'linkedin': 'https://linkedin.com/company/example',
-            'facebook': 'https://facebook.com/example'
-        },
-        'error': None
-    }
-
-def save_scraped_data(data):
-    """Simulasi fungsi penyimpanan data"""
-    return "HISTORY_123"
-
-def show_dashboard():
-    st.title("📊 Dashboard")
-    st.write("Welcome to the Caprae Web Scraper Dashboard!")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric("Total Scrapes", "24", "3")
-    
-    with col2:
-        st.metric("Contacts Found", "156", "12")
-    
-    with col3:
-        st.metric("Success Rate", "92%", "2%")
-    
-    st.subheader("Recent Activity")
-    st.dataframe(pd.DataFrame({
-        'Date': ['2023-10-28', '2023-10-27', '2023-10-26'],
-        'Website': ['example.com', 'test.org', 'demo.net'],
-        'Contacts': [12, 8, 15],
-        'Status': ['Completed', 'Completed', 'Failed']
-    }))
-
-def add_to_history(data):
-    """Simulasi fungsi menambah history"""
-    return "HISTORY_" + str(int(time.time()))
 
 # Import fungsi scraper yang menggunakan Playwright
 try:
@@ -140,6 +98,7 @@ def scrape_pricing_data(url):
 
 # Main content area
 if page == "Dashboard":
+    # Gunakan fungsi show_dashboard dari dashboard_component, bukan yang didefinisikan ulang
     show_dashboard()
 
 elif page == "Universal Contact Scraper":
